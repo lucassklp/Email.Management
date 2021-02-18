@@ -1,0 +1,41 @@
+﻿<Properties StartupConfiguration="{3E33788D-DCF5-422E-9905-8AEEDFFB556D}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/TemplateController.cs">
+    <Files>
+      <File FileName="Persistence/Map/MailMap.cs" Line="24" Column="1" />
+      <File FileName="Persistence/Map/UserMap.cs" Line="16" Column="62" />
+      <File FileName="Controllers/TemplateController.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Email.Management" expanded="True">
+            <Node name="Email.Management" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True">
+                <Node name="TemplateController.cs" selected="True" />
+              </Node>
+              <Node name="Domain" expanded="True" />
+              <Node name="Persistence" expanded="True">
+                <Node name="Map" expanded="True" />
+              </Node>
+              <Node name="Providers" expanded="True" />
+              <Node name="Validators" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Email.Management PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/lucas-simas/Documents/Git/Email.Management/Backend/Middlewares/ExceptionHandlingMiddleware.cs" relfile="Middlewares/ExceptionHandlingMiddleware.cs" line="49" column="1" />
+      <Breakpoint file="/Users/lucas-simas/Documents/Git/Email.Management/Backend/Controllers/AccountController.cs" relfile="Controllers/AccountController.cs" line="37" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
