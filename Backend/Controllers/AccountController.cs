@@ -1,22 +1,21 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using Backend.Domain;
 using Backend.Persistence;
 using Email.Management.Dtos;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Email.Management.Exceptions;
 using Email.Management.Extensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
 
 namespace Email.Management.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IConfiguration configuration;
@@ -35,12 +34,13 @@ namespace Email.Management.Controllers
             {
                 credential.Password = credential.Password.ToSha512();
                 user = context.Set<User>()
-                    //.Select(x => new User
-                    //{
-                    //    Id = x.Id,
-                    //    Email = x.Email
-                    //})
-                    .First(x => x.Email == credential.Email && x.Password == credential.Password);
+                    .Where(x => x.Email == credential.Email && x.Password == credential.Password)
+                    .Select(x => new User
+                    {
+                        Id = x.Id,
+                        Email = x.Email
+                    })
+                    .First();
             }
             catch(Exception ex)
             {

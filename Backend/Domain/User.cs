@@ -4,7 +4,7 @@ using Email.Management.Domain;
 
 namespace Backend.Domain
 {
-    public class User
+    public class User : IUser
     {
         public long Id { get; set; }
         public string Email { get; set; }

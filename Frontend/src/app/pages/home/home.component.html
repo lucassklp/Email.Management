@@ -1,1 +1,94 @@
-<p>home works!</p>
+<button mat-raised-button (click)="goToAddTemplate()" class="btn-add" color="primary">
+    <mat-icon>add</mat-icon> Adicionar Template
+</button>
+
+<button mat-raised-button (click)="goToAddMail()" class="btn-add" color="primary">
+    <mat-icon>add</mat-icon> Adicionar Mail
+</button>
+
+<h2>Templates</h2>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="tableTemplate.dataSource" matSort>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+            <td mat-cell *matCellDef="let row"> {{row.description}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-icon class="clickable" (click)="tableTemplate.edit(row.id)">edit</mat-icon>
+                <mat-icon class="clickable" (click)="tableTemplate.delete(row.id)">delete</mat-icon>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tableTemplate.displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableTemplate.displayedColumns;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No template registred</td>
+        </tr>
+    </table>
+
+    <mat-paginator [length]="tableTemplate.length" [pageSize]="tableTemplate.pageSize"
+        [pageSizeOptions]="tableTemplate.pageSizeOptions" (page)="tableTemplate.update($event)"></mat-paginator>
+</div>
+
+<h2 class="mt-5">Mails</h2>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="tableMail.dataSource" matSort>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+            <td mat-cell *matCellDef="let row"> {{row.emailAddress}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="smtp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> SMTP </th>
+            <td mat-cell *matCellDef="let row"> {{row.host}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ssl">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> SSL </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox [checked]="row.enableSsl" [disabled]="true"></mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="port">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Port </th>
+            <td mat-cell *matCellDef="let row"> {{row.port}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-icon class="clickable" (click)="tableMail.edit(row.id)">edit</mat-icon>
+                <mat-icon class="clickable" (click)="tableMail.delete(row.id)">delete</mat-icon>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="tableMail.displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableMail.displayedColumns;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No mail registred</td>
+        </tr>
+    </table>
+
+    <mat-paginator [length]="tableMail.length" [pageSize]="tableMail.pageSize"
+        [pageSizeOptions]="tableMail.pageSizeOptions" (page)="tableMail.update($event)"></mat-paginator>
+</div>

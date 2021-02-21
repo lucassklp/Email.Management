@@ -27,5 +27,6 @@
     <Folder Include="Middlewares\" />
     <Folder Include="Validators\" />
     <Folder Include="Providers\" />
+    <Folder Include="Dtos\Output\" />
   </ItemGroup>
 </Project>

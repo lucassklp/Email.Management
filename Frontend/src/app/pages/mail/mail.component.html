@@ -1,0 +1,45 @@
+<div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Mail</mat-card-title>
+        </mat-card-header>
+
+        <form [formGroup]="form" (submit)="send()" class="form">
+            <mat-card-content>
+
+            <p>
+                <mat-form-field class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Ex: No Reply, Marketing">
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field class="full-width">
+                    <mat-label>SMTP Host</mat-label>
+                    <input matInput formControlName="host" placeholder="smtp.google.com">
+                </mat-form-field>
+            </p>
+        
+            <mat-form-field class="full-width">
+                <input type="number" matInput formControlName="port" placeholder="Port">
+            </mat-form-field>
+        
+            <p>
+                <mat-checkbox formControlName="enableSsl">SSL</mat-checkbox>
+            </p>
+        
+            <mat-form-field class="full-width">
+                <input matInput formControlName="emailAddress" placeholder="Username">
+            </mat-form-field>
+        
+            <mat-form-field class="full-width">
+                <input type="password" matInput formControlName="password" placeholder="Password">
+            </mat-form-field>
+        </mat-card-content>
+
+        <button mat-raised-button color="primary" [disabled]="form.invalid" class="btn-block">Save</button>
+        </form>
+    </mat-card>
+</div>

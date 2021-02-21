@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import jwtDecode from 'jwt-decode';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,10 +10,13 @@ import { map } from 'rxjs/operators';
 })
 export class AuthenticationService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   public authenticate(email: string, password: string): Observable<string> {
-    return this.http.post<{token: string}>('', {email, password}).pipe(map(x => x.token))
+    return this.http.post<{token: string}>('/api/Account/Login', {email, password}).pipe(map(x => {
+      this.token = x.token;
+      return this.token;
+    }))
   }
 
   public set token(value: string){
@@ -34,6 +38,7 @@ export class AuthenticationService {
   }
 
   public logout(){
-    localStorage.removeItem('token')
+    localStorage.removeItem('token');
+    this.router.navigate(['/login'])
   }
 }

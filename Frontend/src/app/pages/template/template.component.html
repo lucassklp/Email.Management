@@ -1,0 +1,94 @@
+<form [formGroup]="form" (submit)="save()" class="form">
+    <div class="row content mb-3">
+        <div class="col-4">
+            <mat-card-header>
+                <mat-card-title>Template</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <p>
+                    <mat-form-field class="full-width">
+                        <mat-label>Name</mat-label>
+                        <input matInput formControlName="name" placeholder="Eg: Account confirmation">
+                    </mat-form-field>
+                </p>
+
+                <p>
+                    <mat-form-field class="full-width">
+                        <mat-label>Description</mat-label>
+                        <input matInput formControlName="description"
+                            placeholder="Eg: Used to send account confirmation email to the user">
+                    </mat-form-field>
+                </p>
+
+                <p>
+                    <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Email</mat-label>
+                    <mat-select formControlName="mailId">
+                        <mat-option *ngFor="let email of emails" [value]="email.id">
+                        {{email.name}}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+                </p>
+
+                <mat-form-field class="full-width">
+                    <mat-label>Subject</mat-label>
+                    <input matInput formControlName="subject" [placeholder]="'Eg: Welcome \{\{ name \}\}!'">
+                </mat-form-field>
+
+                <p>
+                    <mat-checkbox formControlName="isHtml">HTML</mat-checkbox>
+                </p>
+
+
+                <mat-card-header>
+                    <h2>Test parameters <mat-icon class="control" (click)="addParam()">add</mat-icon></h2>
+                </mat-card-header>
+
+                <div class="row mt-3">
+                    <div class="col-5" *ngIf="pairs.length > 0">Key</div>
+                    <div class="col-5" *ngIf="pairs.length > 0">Value</div>
+                    <div class="col-12">
+                        <div class="row" *ngFor="let pair of pairs; let i = index; let first = first">
+                            <div class="col-5">
+                                <mat-form-field class="full-width">
+                                    <input type="text" matInput [(ngModel)]="pair.key"
+                                        [ngModelOptions]="{standalone: true}" />
+                                </mat-form-field>
+                            </div>
+    
+                            <div class="col-5">
+                                <mat-form-field class="full-width">
+                                    <input type="text" matInput [(ngModel)]="pair.value"
+                                        [ngModelOptions]="{standalone: true}" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1 mt-2">
+                                <mat-icon class="control" (click)="addParam()">add</mat-icon>
+                            </div>
+                            <div class="col-1 mt-2">
+                                <mat-icon class="control" (click)="removeParam(i)">remove</mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button mat-raised-button color="primary" [disabled]="form.invalid" class="btn-block">Save</button>
+                <button mat-raised-button color="primary" (click)="test()" class="btn-block">Send a test</button>
+            </mat-card-content>
+        </div>
+        <div class="col-8">
+            <ngx-monaco-editor [options]="editorOptions" formControlName="content"></ngx-monaco-editor>
+        </div>
+    </div>
+</form>
+
+    <div class="row content mt-5">
+        <div class="col-12">
+        <mat-card-header>
+            <mat-card-title>Preview</mat-card-title>
+        </mat-card-header>
+        <iframe id="preview" class="preview mt-3" sandbox></iframe>
+        </div>
+    </div>

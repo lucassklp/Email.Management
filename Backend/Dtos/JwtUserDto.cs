@@ -1,7 +1,9 @@
 ﻿using System;
+using Email.Management.Domain;
+
 namespace Email.Management.Dtos
 {
-    public class JwtUserDto
+    public class JwtUserDto : IUser
     {
         public JwtUserDto(long id, string email)
         {

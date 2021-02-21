@@ -113,8 +113,11 @@ namespace Email.Management
                     .AllowAnyHeader()
                 );
             }
+            else
+            {
+                app.UseHttpsRedirection();
+            }
             app.UseExceptionHandlingMiddleware();
-            app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();

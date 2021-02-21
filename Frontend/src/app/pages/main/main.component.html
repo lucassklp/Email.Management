@@ -1,0 +1,23 @@
+<mat-toolbar color="primary">
+  <button (click)="drawer.toggle()" mat-icon-button aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <a class="nav-title" routerLink="/main/home">Email Management</a>
+  <span class="spacer"></span>
+  <button [routerLink]="'/main/home'" mat-icon-button aria-label="Home">
+    <mat-icon>home</mat-icon>
+  </button>
+  <button (click)="authenticationService.logout()" mat-icon-button aria-label="Logout">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-drawer-container class="main-container" autosize>
+  <mat-drawer #drawer class="main-sidenav" mode="side">
+    heuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehau
+  </mat-drawer>
+  <div class="container">
+
+    <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>

@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Backend.Domain;
 using Backend.Persistence;
 using Email.Management.Domain;
 using Email.Management.Dtos;
@@ -19,7 +18,7 @@ using Stubble.Core.Builders;
 namespace Email.Management.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class TemplateController : ControllerBase
     {
@@ -33,28 +32,61 @@ namespace Email.Management.Controllers
             this.encryption = encryption;
         }
 
-        [HttpGet("List")]
-        public List<Template> GetTemplates([FromQuery] int offset, [FromQuery] int size)
+        [HttpGet("{id}")]
+        public TemplateDto Get(long id)
         {
             return context.Set<Template>()
+                .Where(x => x.Id == id && user.Id == x.User.Id)
+                .OrderByDescending(x => x.Id)
+                .ToList()
+                .Select(x => new TemplateDto
+                {
+                    Id = x.Id,
+                    Content = x.Content,
+                    Description = x.Description,
+                    IsHtml = x.IsHtml,
+                    Name = x.Name,
+                    Subject = x.Subject,
+                    MailId = x.MailId
+                })
+                .First();
+        }
+
+        [HttpGet("List")]
+        public PagedResultDto<List<Template>> GetTemplates([FromQuery] int offset, [FromQuery] int size)
+        {
+
+            var query = context.Set<Template>()
+                .Where(x => x.User.Id == user.Id);
+
+            var total = query.Count();
+
+            var result = query
+                .OrderByDescending(x => x.Id)
+                .Skip(offset)
+                .Take(size)
                 .Select(x => new Template
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Description = x.Description
                 })
-               .Where(x => x.User.Id == user.Id)
-               .OrderByDescending(x => x.Id)
-               .Skip(offset)
-               .Take(size)
                .ToList();
+
+
+            return new PagedResultDto<List<Template>>
+            {
+                Total = total,
+                Content = result
+            };
         }
 
-        [HttpPost("Create")]
-        public IActionResult Create([FromBody] CreateTemplateDto templateDto)
+        [HttpPost("Save")]
+        public TemplateDto Save([FromBody] TemplateDto templateDto)
         {
             Template template = new Template
             {
+                Id = templateDto.Id,
                 Content = templateDto.Content,
                 Description = templateDto.Description,
                 IsHtml = templateDto.IsHtml,
@@ -62,22 +94,86 @@ namespace Email.Management.Controllers
                 Subject = templateDto.Subject,
                 MailId = templateDto.MailId,
                 UserId = user.Id
-                
             };
 
-            context.Add(template);
+            context.Update(template);
+            context.SaveChanges();
+
+            templateDto.Id = template.Id;
+
+            return templateDto;
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(long id)
+        {
+            var user = context.Set<Template>()
+                .Where(x => x.Id == id)
+                .Select(x => new Template
+                {
+                    Id = x.Id
+                })
+                .First();
+
+            context.Remove(user);
             context.SaveChanges();
 
             return Ok();
         }
 
+        [HttpPost("Test")]
+        [Authorize]
+        public async Task<IActionResult> Test(TestTemplateDto template)
+        {
+            Mail mail;
+            try
+            {
+                mail = context.Set<Mail>()
+                    .Where(x => x.User.Id == user.Id && x.Id == template.MailId)
+                    .First();
+            }
+            catch(Exception ex)
+            {
+                throw new BusinessException("mail-not-found", "The provided mail was not found" , ex);
+            }
+
+            var stubble = new StubbleBuilder().Build();
+            var from = new MailAddress(mail.EmailAddress);
+            var to = new MailAddress(template.Recipient.Email);
+            var password = encryption.Decrypt(mail.Password, template.Secret);
+            var subject = await stubble.RenderAsync(template.Subject, template.Recipient.Args);
+            var body = await stubble.RenderAsync(template.Content, template.Recipient.Args);
+
+            var message = new MailMessage(from, to)
+            {
+                Subject = subject,
+                Body = body,
+                BodyEncoding = Encoding.UTF8,
+                IsBodyHtml = template.IsHtml
+            };
+
+            using var smtp = new SmtpClient(mail.Host, mail.Port)
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                EnableSsl = mail.EnableSsl,
+                Credentials = new NetworkCredential(mail.EmailAddress, password)
+            };
+
+            await smtp.SendMailAsync(message);
+
+            return Ok();
+        }
+
         [HttpPost("Send/{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Send(long id, [FromBody] SendMailDto sendMail)
         {
             Template template;
             try
             {
                 template = await context.Set<Template>()
+                    .Include(x => x.Mail)
                     .FirstAsync(x => x.User.Token == sendMail.Token && x.Id == id);
             }
             catch
@@ -85,26 +181,16 @@ namespace Email.Management.Controllers
                 throw new TemplateNotFoundException();
             }
 
-            Mail mail;
-            try
-            {
-                mail = await context.Set<Mail>()
-                    .FirstAsync(x => x.Id == sendMail.MailId && x.User.Id == user.Id);
-            }
-            catch
-            {
-                throw new MailNotFoundException();
-            }
-
             var stubble = new StubbleBuilder().Build();
-            var subject = await stubble.RenderAsync(template.Subject, sendMail.Args);
-            var body = await stubble.RenderAsync(template.Content, sendMail.Args);
-            var from = new MailAddress(mail.EmailAddress, mail.Name);
-            var password = encryption.Decrypt(mail.Password, sendMail.Secret);
+            var from = new MailAddress(template.Mail.EmailAddress, template.Mail.Name);
+            var password = encryption.Decrypt(template.Mail.Password, sendMail.Secret);
 
             foreach (var recipient in sendMail.Recipients)
             {
-                var to = new MailAddress(recipient);
+
+                var subject = await stubble.RenderAsync(template.Subject, recipient.Args);
+                var body = await stubble.RenderAsync(template.Content, recipient.Args);
+                var to = new MailAddress(recipient.Email);
 
                 var message = new MailMessage(from, to)
                 {
@@ -114,12 +200,12 @@ namespace Email.Management.Controllers
                     IsBodyHtml = template.IsHtml
                 };
 
-                using var smtp = new SmtpClient(mail.Host, mail.Port)
+                using var smtp = new SmtpClient(template.Mail.Host, template.Mail.Port)
                 {
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,
-                    EnableSsl = mail.EnableSsl,
-                    Credentials = new NetworkCredential(mail.EmailAddress, password)
+                    EnableSsl = template.Mail.EnableSsl,
+                    Credentials = new NetworkCredential(template.Mail.EmailAddress, password)
                 };
                 try
                 {

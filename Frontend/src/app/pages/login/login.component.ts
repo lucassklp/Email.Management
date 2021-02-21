@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup;
   constructor(private router: Router, private authenticationService: AuthenticationService, fb: FormBuilder) {
     this.form = fb.group({
-      'username': ['', [Validators.required]],
+      'email': ['', [Validators.required, Validators.email]],
       'password': ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -22,9 +22,9 @@ export class LoginComponent implements OnInit {
   }
 
   login() : void {
-    this.authenticationService.authenticate(this.form.value.username, this.form.value.password)
+    this.authenticationService.authenticate(this.form.value.email, this.form.value.password)
       .subscribe(token => {
-        this.router.navigate(['home'])
+        this.router.navigate(['/main/home'])
       })
   }
   

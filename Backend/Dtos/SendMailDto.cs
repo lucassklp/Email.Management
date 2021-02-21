@@ -7,8 +7,12 @@ namespace Email.Management.Dtos
     {
         public Guid Token { get; set; }
         public string Secret { get; set; }
-        public long MailId { get; set; }
-        public List<string> Recipients { get; set; }
-        public Dictionary<string, string> Args { get; set; }
+        public List<RecipientDto> Recipients { get; set; }
+
+        public class RecipientDto
+        {
+            public string Email { get; set; }
+            public Dictionary<string, string> Args { get; set; }
+        }
     }
 }
