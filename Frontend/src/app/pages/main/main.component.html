@@ -13,11 +13,28 @@
 </mat-toolbar>
 
 <mat-drawer-container class="main-container" autosize>
-  <mat-drawer #drawer class="main-sidenav" mode="side">
-    heuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehauheuhuehuahuaheuaheuhauehauehau
+  <mat-drawer #drawer class="main-sidenav" opened="true" mode="side">
+
+    <mat-selection-list [multiple]="false">
+      <mat-list-option routerLink="/main/home">
+        <mat-icon mat-list-icon>home</mat-icon>
+        Home
+      </mat-list-option>
+      <mat-list-option routerLink="/main/template">
+        <mat-icon mat-list-icon>add</mat-icon>
+        Add Template
+      </mat-list-option>
+      <mat-list-option routerLink="/main/mail">
+        <mat-icon mat-list-icon>add</mat-icon>
+        Add Mail
+      </mat-list-option>
+      <mat-list-option (click)="authenticationService.logout()">
+        <mat-icon mat-list-icon>logout</mat-icon>
+        Logout
+      </mat-list-option>
+    </mat-selection-list>
   </mat-drawer>
   <div class="container">
-
     <router-outlet></router-outlet>
   </div>
 </mat-drawer-container>

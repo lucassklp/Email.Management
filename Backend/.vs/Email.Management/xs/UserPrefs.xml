@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Controllers/MailController.cs">
     <Files>
       <File FileName="Dtos/JwtUserDto.cs" Line="6" Column="34" />
-      <File FileName="Controllers/MailController.cs" Line="98" Column="1" />
+      <File FileName="Controllers/MailController.cs" Line="143" Column="34" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

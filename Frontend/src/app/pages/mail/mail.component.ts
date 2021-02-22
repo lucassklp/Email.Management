@@ -83,9 +83,6 @@ export class MailComponent implements OnInit {
       else{
         this.router.navigate(['/main/home']);
       }
-
-
-
     });
   }
 }

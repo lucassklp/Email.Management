@@ -18,6 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatListModule } from '@angular/material/list';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -71,7 +72,8 @@ import { AlertDialogComponent } from './dialogs/alert-dialog/alert-dialog.compon
     MatPaginatorModule,
     MatSelectModule,
     MatCheckboxModule,
-    MatGridListModule
+    MatGridListModule,
+    MatListModule
   ],
   providers: [
     {

@@ -8,6 +8,9 @@ import { TestTemplate } from 'src/app/models/test.template';
 import { MailService } from 'src/app/services/mail.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { RequestSecretAndEmailComponent } from 'src/app/dialogs/request-secret-and-email/request-secret-and-email.component';
+import { RecipientAndSecret } from 'src/app/models/recipient.and.secret';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-template',
@@ -27,11 +30,14 @@ export class TemplateComponent implements OnInit {
     }
   ];
 
+  recipientAndSecret?: RecipientAndSecret;
+
   constructor(fb: FormBuilder, 
     private route: ActivatedRoute, 
     private templateService: TemplateService, 
     private mailService: MailService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private dialog: MatDialog) {
     this.form = fb.group({
       'name': ['', [Validators.required]],
       'description': ['', [Validators.required]],
@@ -91,26 +97,38 @@ export class TemplateComponent implements OnInit {
   }
 
   test(){
-    let params: {[key: string]: string} = {};
-    this.pairs.forEach(x => params[x.key] = x.value);
 
-    console.log(this.form.get('mailId'))
+    const dialogRef = this.dialog.open(RequestSecretAndEmailComponent, {
+      maxWidth: "400px",
+      data: this.recipientAndSecret
+    });
 
-    let template = new TestTemplate();
-    template.content = this.form.get('content')?.value;
-    template.name = this.form.get('name')?.value;
-    template.description = this.form.get('description')?.value;
-    template.isHtml = this.form.get('isHtml')?.value;
-    template.mailId = this.form.get('mailId')?.value;
-    template.subject = this.form.get('subject')?.value;
-    template.secret = 'e8431f09-5612-450c-8d09-ea4bcbfe5d56';
+    dialogRef.afterClosed().subscribe((dialogResult: RecipientAndSecret) => {
+      if(dialogResult){
+        if(dialogResult.save){
+          this.recipientAndSecret = dialogResult;
+        }
 
-    template.recipient = {
-      email: 'simas.lucas@hotmail.com',
-      args: params
-    };
-    this.templateService.test(template).subscribe(() => {
-      this.toastr.success('E-mail sent successfully!');
-    })
+        let params: {[key: string]: string} = {};
+        this.pairs.forEach(x => params[x.key] = x.value);
+        
+        let template = new TestTemplate();
+        template.content = this.form.get('content')?.value;
+        template.name = this.form.get('name')?.value;
+        template.description = this.form.get('description')?.value;
+        template.isHtml = this.form.get('isHtml')?.value;
+        template.mailId = this.form.get('mailId')?.value;
+        template.subject = this.form.get('subject')?.value;
+        template.secret = dialogResult.secret;
+
+        template.recipient = {
+          email: dialogResult.email,
+          args: params
+        };
+        this.templateService.test(template).subscribe(() => {
+          this.toastr.success('E-mail sent successfully!');
+        })
+      }
+    });
   }
 }
