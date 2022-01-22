@@ -85,7 +85,7 @@ export class TemplateComponent implements OnInit {
     this.pairs.forEach(x => params[x.key] = x.value);
 
     let content = Mustache.render(this.form.value.content, params);
-    iframe.src = "data:text/html;charset=utf-8," + escape(content);
+    iframe.src = "data:text/html;charset=utf-8," + encodeURIComponent(content);
   }
 
   removeParam(index: number){
