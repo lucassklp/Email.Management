@@ -7,7 +7,7 @@ namespace Email.Management.Validators
 {
     public class ValidationInterceptor : IValidatorInterceptor
     {
-        public ValidationResult AfterMvcValidation(ControllerContext controllerContext, IValidationContext commonContext, ValidationResult result)
+        public ValidationResult AfterAspNetValidation(ActionContext actionContext, IValidationContext validationContext, ValidationResult result)
         {
             if (!result.IsValid)
             {
@@ -16,7 +16,7 @@ namespace Email.Management.Validators
             return result;
         }
 
-        public IValidationContext BeforeMvcValidation(ControllerContext controllerContext, IValidationContext commonContext)
+        public IValidationContext BeforeAspNetValidation(ActionContext actionContext, IValidationContext commonContext)
         {
             return commonContext;
         }

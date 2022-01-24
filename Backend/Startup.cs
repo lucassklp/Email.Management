@@ -105,8 +105,6 @@ namespace Email.Management
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Email.Management v1"));
                 app.UseCors(x => x
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
@@ -114,7 +112,9 @@ namespace Email.Management
                 );
             }
 
-            app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Email.Management v1"));
+            //app.UseHttpsRedirection();
             app.UseExceptionHandlingMiddleware();
             app.UseDefaultFiles();
             app.UseStaticFiles();

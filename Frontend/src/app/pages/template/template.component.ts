@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Template } from 'src/app/models/template';
 import { TemplateService } from 'src/app/services/template.service';
-import * as  Mustache from 'mustache';
+import Mustache from 'mustache';
 import { Pair } from 'src/app/models/pair';
 import { TestTemplate } from 'src/app/models/test.template';
 import { MailService } from 'src/app/services/mail.service';

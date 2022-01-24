@@ -42,7 +42,7 @@ namespace Email.Management.Controllers
                     })
                     .First();
             }
-            catch(Exception ex)
+            catch
             {
                 throw new InvalidCredentialException();
             }
@@ -61,8 +61,10 @@ namespace Email.Management.Controllers
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 
-            var token = new TokenDto();
-            token.Token = tokenHandler.WriteToken(securityToken);
+            var token = new TokenDto
+            {
+                Token = tokenHandler.WriteToken(securityToken)
+            };
 
             return Ok(token);
         }
@@ -70,10 +72,12 @@ namespace Email.Management.Controllers
         [HttpPost("Register")]
         public IActionResult Register([FromBody] RegisterUserDto registrationUser)
         {
-            var user = new User();
-            user.Password = registrationUser.Password.ToSha512();
-            user.Token = Guid.NewGuid();
-            user.Email = registrationUser.Email;
+            var user = new User
+            {
+                Password = registrationUser.Password.ToSha512(),
+                Token = Guid.NewGuid(),
+                Email = registrationUser.Email
+            };
 
             context.Add(user);
             context.SaveChanges();

@@ -1,2 +1,7 @@
 Frontend/node_modules
 Frontend/dist
+Frontend/.angular
+
+Backend/.vs
+Backend/bin
+Backend/obj
