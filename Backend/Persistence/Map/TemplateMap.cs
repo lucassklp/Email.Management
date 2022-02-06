@@ -1,5 +1,4 @@
-﻿using System;
-using Email.Management.Domain;
+﻿using Email.Management.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

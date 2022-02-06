@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using Backend.Persistence;
@@ -48,8 +46,8 @@ namespace Email.Management
                 options.AllowSynchronousIO = true;
             });
 
-
-            var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("Secret"));
+            var secret = Configuration.GetValue<string>("JwtSecret");
+            var key = Encoding.ASCII.GetBytes(secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -104,6 +102,7 @@ namespace Email.Management
         {
             if (env.IsDevelopment())
             {
+                app.UseHttpsRedirection();
                 app.UseDeveloperExceptionPage();
                 app.UseCors(x => x
                     .AllowAnyOrigin()
@@ -114,7 +113,7 @@ namespace Email.Management
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Email.Management v1"));
-            //app.UseHttpsRedirection();
+            
             app.UseExceptionHandlingMiddleware();
             app.UseDefaultFiles();
             app.UseStaticFiles();

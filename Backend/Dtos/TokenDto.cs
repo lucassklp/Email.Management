@@ -1,5 +1,4 @@
-﻿using System;
-namespace Email.Management.Dtos
+﻿namespace Email.Management.Dtos
 {
     public class TokenDto
     {

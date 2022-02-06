@@ -10,10 +10,10 @@ import { AbstractService } from './abstract.service';
 export class MailService extends AbstractService<Mail> {
 
   constructor(http: HttpClient) {
-    super('Mail', http)
+    super('email-accounts', http)
   }
 
   listAll(): Observable<{id: number, name: string}[]> {
-    return this.http.get<{id: number, name: string}[]>('/api/Mail/ListAll')
+    return this.http.get<{id: number, name: string}[]>('/api/email-accounts/list-all')
   }
 }

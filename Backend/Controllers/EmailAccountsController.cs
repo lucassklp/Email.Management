@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Backend.Domain;
 using Backend.Persistence;
 using Email.Management.Domain;
 using Email.Management.Dtos;
@@ -9,22 +7,25 @@ using Email.Management.Dtos.Output;
 using Email.Management.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Email.Management.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/email-accounts")]
     [Authorize]
-    public class MailController : ControllerBase
+    public class EmailAccountsController : ControllerBase
     {
         private readonly DaoContext context;
         private readonly JwtUserDto user;
         private readonly EncryptionProvider encryption;
-        public MailController(DaoContext context, JwtUserDto user, EncryptionProvider encryption)
+        private readonly IConfiguration configuration;
+        public EmailAccountsController(DaoContext context, JwtUserDto user, EncryptionProvider encryption, IConfiguration configuration)
         {
             this.context = context;
             this.user = user;
             this.encryption = encryption;
+            this.configuration = configuration;
         }
 
         [HttpDelete("{id}")]
@@ -51,14 +52,12 @@ namespace Email.Management.Controllers
                     EnableSsl = x.EnableSsl,
                     Host = x.Host,
                     Name = x.Name,
-                    Password = string.Empty,
                     Port = x.Port
                 })
                 .First();
         }
 
-
-        [HttpGet("ListAll")]
+        [HttpGet("list-all")]
         public List<SimpleMailOutputDto> ListAll()
         {
             return context.Set<Mail>()
@@ -77,9 +76,8 @@ namespace Email.Management.Controllers
                 .ToList();
         }
 
-
-        [HttpGet("List")]
-        public PagedResultDto<List<MailDto>> GetTemplates([FromQuery] int offset, [FromQuery] int size)
+        [HttpGet]
+        public PagedResultDto<MailDto> GetTemplates([FromQuery] int offset, [FromQuery] int size)
         {
             var query = context.Set<Mail>()
                 .Where(x => x.User.Id == user.Id);
@@ -102,20 +100,22 @@ namespace Email.Management.Controllers
                .ToList();
 
 
-            return new PagedResultDto<List<MailDto>>
+            return new PagedResultDto<MailDto>
             {
                 Total = total,
                 Content = result
             };
         }
 
-
-        [HttpPost("Save")]
-        public MailOutputDto Save([FromBody] MailDto mailDto)
+        [HttpPost]
+        public MailDto Save([FromBody] InputMailDto mailDto)
         {
-            var setPassword = (mailDto.Id != 0 && !string.IsNullOrEmpty(mailDto.Password))
+            var isUpdatePassword = (mailDto.Id != 0 && !string.IsNullOrEmpty(mailDto.Password))
                 || mailDto.Id == 0;
-            var secret = Guid.NewGuid().ToString();
+
+            var secret = configuration.GetValue<string>("PasswordSecret");
+            var encryptedPassword = encryption.Encrypt(mailDto.Password, secret);
+            
             var mail = new Mail
             {
                 Id = mailDto.Id,
@@ -123,25 +123,23 @@ namespace Email.Management.Controllers
                 EnableSsl = mailDto.EnableSsl,
                 Host = mailDto.Host,
                 Name = mailDto.Name,
-                Password = setPassword ? encryption.Encrypt(mailDto.Password, secret) : string.Empty,
+                Password = isUpdatePassword ? encryptedPassword : string.Empty,
                 Port = mailDto.Port,
                 UserId = user.Id
             };
 
             context.Update(mail);
-            context.Entry(mail).Property(x => x.Password).IsModified = setPassword;
+            context.Entry(mail).Property(x => x.Password).IsModified = isUpdatePassword;
             context.SaveChanges();
 
-            return new MailOutputDto
+            return new MailDto
             {
                 Id = mail.Id,
                 EmailAddress = mail.EmailAddress,
                 EnableSsl = mail.EnableSsl,
                 Host = mail.Host,
                 Name = mail.Name,
-                Password = mailDto.Password,
-                Port = mail.Port,
-                Secret = setPassword ? secret : null
+                Port = mail.Port
             };
         }
     }

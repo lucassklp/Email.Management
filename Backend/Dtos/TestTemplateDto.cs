@@ -1,5 +1,4 @@
-﻿using System;
-using static Email.Management.Dtos.SendMailDto;
+﻿using static Email.Management.Dtos.SendMailDto;
 
 namespace Email.Management.Dtos
 {

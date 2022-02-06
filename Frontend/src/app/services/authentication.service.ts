@@ -13,7 +13,7 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private router: Router) { }
 
   public authenticate(email: string, password: string): Observable<string> {
-    return this.http.post<{token: string}>('/api/Account/Login', {email, password}).pipe(map(x => {
+    return this.http.post<{token: string}>('/api/accounts/login', {email, password}).pipe(map(x => {
       this.token = x.token;
       return this.token;
     }))

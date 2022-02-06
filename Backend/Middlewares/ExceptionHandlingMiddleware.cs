@@ -58,7 +58,7 @@ namespace Email.Management.Middlewares
             catch (Exception ex) //Unhandled Exceptions
             {
                 var guid = Guid.NewGuid().ToString();
-
+                httpContext.Response.ContentType = "application/json";
                 var errorLog = new StringBuilder();
                 errorLog.AppendLine($"An error occurred (Guid = {guid}): {ex.Message}");
                 errorLog.AppendLine($"Request Path: {httpContext.Request.Path}");

@@ -21,12 +21,11 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Dtos\" />
+    <Folder Include="wwwroot\" />
     <Folder Include="Persistence\Map\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Validators\" />
     <Folder Include="Providers\" />
-    <Folder Include="Dtos\Output\" />
   </ItemGroup>
 </Project>

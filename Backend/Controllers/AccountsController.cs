@@ -15,18 +15,18 @@ using Microsoft.Extensions.Configuration;
 namespace Email.Management.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    [Route("api/accounts")]
+    public class AccountsController : ControllerBase
     {
         private readonly IConfiguration configuration;
         private readonly DaoContext context;
-        public AccountController(IConfiguration configuration, DaoContext context)
+        public AccountsController(IConfiguration configuration, DaoContext context)
         {
             this.configuration = configuration;
             this.context = context;
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public IActionResult Login([FromBody] CredentialDto credential)
         {
             User user;
@@ -48,7 +48,7 @@ namespace Email.Management.Controllers
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(configuration.GetValue<string>("Secret"));
+            var key = Encoding.ASCII.GetBytes(configuration.GetValue<string>("JwtSecret"));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -69,7 +69,7 @@ namespace Email.Management.Controllers
             return Ok(token);
         }
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public IActionResult Register([FromBody] RegisterUserDto registrationUser)
         {
             var user = new User

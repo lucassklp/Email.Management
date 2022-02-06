@@ -1,5 +1,4 @@
-﻿using System;
-namespace Email.Management.Exceptions
+﻿namespace Email.Management.Exceptions
 {
     public class TemplateNotFoundException : BusinessException
     {
