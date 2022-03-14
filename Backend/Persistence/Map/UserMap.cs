@@ -1,5 +1,4 @@
-﻿using System;
-using Backend.Domain;
+﻿using Backend.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

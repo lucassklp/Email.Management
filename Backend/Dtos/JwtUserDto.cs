@@ -1,5 +1,4 @@
-﻿using System;
-using Email.Management.Domain;
+﻿using Email.Management.Domain;
 
 namespace Email.Management.Dtos
 {

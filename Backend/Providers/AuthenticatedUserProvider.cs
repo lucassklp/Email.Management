@@ -32,15 +32,15 @@ namespace Email.Management.Providers
 
         public JwtUserDto GetAuthenticatedJwtUser()
         {
-            var tokenId = httpContextAccessor?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var tokenEmail = httpContextAccessor?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value;
+            var tokenId = httpContextAccessor?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var tokenEmail = httpContextAccessor?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             if (tokenId != null)
             {
                 var id = Convert.ToInt32(tokenId);
                 return new JwtUserDto(id, tokenEmail);
             }
 
-            return null;
+            return new JwtUserDto(0, null);
         }
     }
 }

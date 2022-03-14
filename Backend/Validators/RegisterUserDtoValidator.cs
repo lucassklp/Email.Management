@@ -1,5 +1,4 @@
-﻿using System;
-using Email.Management.Dtos;
+﻿using Email.Management.Dtos;
 using FluentValidation;
 
 namespace Email.Management.Validators

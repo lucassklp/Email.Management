@@ -12,11 +12,11 @@ export class AbstractService<TModel> {
   }
 
   public save(template: TModel): Observable<TModel>{
-    return this.http.post<TModel>(`/api/${this.name}/Save`, template);
+    return this.http.post<TModel>(`/api/${this.name}`, template);
   }
 
   public list(offset: number, size: number): Observable<PagedResult<TModel[]>> {
-    return this.http.get<PagedResult<TModel[]>>(`/api/${this.name}/List`, {
+    return this.http.get<PagedResult<TModel[]>>(`/api/${this.name}`, {
       params: {
         "offset": offset.toString(), 
         "size": size.toString()}

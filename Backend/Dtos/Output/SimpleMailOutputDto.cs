@@ -1,5 +1,4 @@
-﻿using System;
-namespace Email.Management.Dtos.Output
+﻿namespace Email.Management.Dtos.Output
 {
     public class SimpleMailOutputDto
     {

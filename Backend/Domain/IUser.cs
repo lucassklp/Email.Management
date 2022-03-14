@@ -1,5 +1,4 @@
-﻿using System;
-namespace Email.Management.Domain
+﻿namespace Email.Management.Domain
 {
     public interface IUser
     {

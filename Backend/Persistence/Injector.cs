@@ -1,9 +1,6 @@
-﻿using System;
-using Backend.Persistence;
+﻿using Backend.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Email.Management.Persistence

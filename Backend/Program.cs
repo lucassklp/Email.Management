@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Email.Management
 {
@@ -13,7 +8,19 @@ namespace Email.Management
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).ConfigureAppConfiguration((hostingContext, configuration) =>
+            {
+                IHostEnvironment env = hostingContext.HostingEnvironment;
+
+                configuration
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables();
+
+                IConfigurationRoot configurationRoot = configuration.Build();
+            })
+            .Build()
+            .Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

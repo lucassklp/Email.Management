@@ -6,7 +6,6 @@ namespace Email.Management.Dtos
     public class SendMailDto
     {
         public Guid Token { get; set; }
-        public string Secret { get; set; }
         public List<RecipientDto> Recipients { get; set; }
 
         public class RecipientDto

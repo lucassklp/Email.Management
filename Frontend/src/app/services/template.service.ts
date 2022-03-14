@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { PagedResult } from '../models/paged.result';
 import { Template } from '../models/template';
 import { TestTemplate } from '../models/test.template';
 import { AbstractService } from './abstract.service';
@@ -12,10 +10,10 @@ import { AbstractService } from './abstract.service';
 export class TemplateService extends AbstractService<Template> {
 
   constructor(http: HttpClient) {
-    super('Template', http)
+    super('templates', http)
   }
 
   public test(template: TestTemplate){
-    return this.http.post<void>('/api/Template/Test', template);
+    return this.http.post<void>('/api/templates/test', template);
   }
 }

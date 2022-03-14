@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -13,23 +12,26 @@ using Email.Management.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Stubble.Core.Builders;
 
 namespace Email.Management.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/templates")]
     [Authorize]
-    public class TemplateController : ControllerBase
+    public class TemplatesController : ControllerBase
     {
         private readonly DaoContext context;
         private readonly JwtUserDto user;
         private readonly EncryptionProvider encryption;
-        public TemplateController(DaoContext context, JwtUserDto user, EncryptionProvider encryption)
+        private readonly IConfiguration configuration;
+        public TemplatesController(DaoContext context, JwtUserDto user, EncryptionProvider encryption, IConfiguration configuration)
         {
             this.context = context;
             this.user = user;
             this.encryption = encryption;
+            this.configuration = configuration;
         }
 
         [HttpGet("{id}")]
@@ -52,8 +54,8 @@ namespace Email.Management.Controllers
                 .First();
         }
 
-        [HttpGet("List")]
-        public PagedResultDto<List<Template>> GetTemplates([FromQuery] int offset, [FromQuery] int size)
+        [HttpGet]
+        public PagedResultDto<Template> ListTemplates([FromQuery] int offset, [FromQuery] int size)
         {
 
             var query = context.Set<Template>()
@@ -74,14 +76,14 @@ namespace Email.Management.Controllers
                .ToList();
 
 
-            return new PagedResultDto<List<Template>>
+            return new PagedResultDto<Template>
             {
                 Total = total,
                 Content = result
             };
         }
 
-        [HttpPost("Save")]
+        [HttpPost]
         public TemplateDto Save([FromBody] TemplateDto templateDto)
         {
             Template template = new Template
@@ -121,7 +123,7 @@ namespace Email.Management.Controllers
             return Ok();
         }
 
-        [HttpPost("Test")]
+        [HttpPost("test")]
         [Authorize]
         public async Task<IActionResult> Test(TestTemplateDto template)
         {
@@ -165,7 +167,7 @@ namespace Email.Management.Controllers
             return Ok();
         }
 
-        [HttpPost("Send/{id}")]
+        [HttpPost("send/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> Send(long id, [FromBody] SendMailDto sendMail)
         {
@@ -181,9 +183,10 @@ namespace Email.Management.Controllers
                 throw new TemplateNotFoundException();
             }
 
+            var secret = configuration.GetValue<string>("PasswordSecret");
             var stubble = new StubbleBuilder().Build();
             var from = new MailAddress(template.Mail.EmailAddress, template.Mail.Name);
-            var password = encryption.Decrypt(template.Mail.Password, sendMail.Secret);
+            var password = encryption.Decrypt(template.Mail.Password, secret);
 
             foreach (var recipient in sendMail.Recipients)
             {
@@ -213,7 +216,7 @@ namespace Email.Management.Controllers
                 }
                 catch(Exception ex)
                 {
-                    throw new BusinessException("smtp-error", $"Something happened when sending the email to {recipient} via SMTP: {ex.Message}", ex);
+                    throw new BusinessException("smtp-error", $"Something happened when sending the email to {recipient.Email} via SMTP: {ex.Message}", ex);
                 }
             }
 
