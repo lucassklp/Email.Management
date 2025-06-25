@@ -20,7 +20,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -36,55 +36,51 @@ import { RequestSecretAndEmailComponent } from './dialogs/request-secret-and-ema
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from './dialogs/alert-dialog/alert-dialog.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    HomeComponent,
-    MainComponent,
-    TemplateComponent,
-    MailComponent,
-    RequestSecretAndEmailComponent,
-    ConfirmDialogComponent,
-    AlertDialogComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    ToastrModule.forRoot(),
-    MonacoEditorModule,
-    MatToolbarModule,
-    MatButtonModule, 
-    MatCardModule,
-    MatInputModule,
-    MatDialogModule,
-    MatTableModule,
-    MatMenuModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSidenavModule,
-    MatPaginatorModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatGridListModule,
-    MatListModule
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorHandlingInterceptor,
-      multi: true
-    }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        LoginComponent,
+        HomeComponent,
+        MainComponent,
+        TemplateComponent,
+        MailComponent,
+        RequestSecretAndEmailComponent,
+        ConfirmDialogComponent,
+        AlertDialogComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ToastrModule.forRoot(),
+        MonacoEditorModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatCardModule,
+        MatInputModule,
+        MatDialogModule,
+        MatTableModule,
+        MatMenuModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatSidenavModule,
+        MatPaginatorModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatGridListModule,
+        MatListModule
+    ], 
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthenticationInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ErrorHandlingInterceptor,
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
