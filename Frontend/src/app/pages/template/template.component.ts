@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Template } from 'src/app/models/template';
 import { TemplateService } from 'src/app/services/template.service';
 import Mustache from 'mustache';
@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class TemplateComponent implements OnInit {
 
   id: number = 0;
-  form: FormGroup;
+  form: UntypedFormGroup;
   editorOptions = {theme: 'vs-white', language: 'html'};
   emails: {id: number, name: string}[] = []
   pairs: Pair<string, string>[] = [
@@ -32,7 +32,7 @@ export class TemplateComponent implements OnInit {
 
   recipientAndSecret?: RecipientAndSecret;
 
-  constructor(fb: FormBuilder, 
+  constructor(fb: UntypedFormBuilder, 
     private route: ActivatedRoute, 
     private templateService: TemplateService, 
     private mailService: MailService,

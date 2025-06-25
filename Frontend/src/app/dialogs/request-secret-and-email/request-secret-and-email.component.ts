@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RecipientAndSecret } from 'src/app/models/recipient.and.secret';
 
@@ -9,8 +9,8 @@ import { RecipientAndSecret } from 'src/app/models/recipient.and.secret';
   styleUrls: ['./request-secret-and-email.component.scss']
 })
 export class RequestSecretAndEmailComponent {
-  form: FormGroup;
-  constructor(fb: FormBuilder, 
+  form: UntypedFormGroup;
+  constructor(fb: UntypedFormBuilder, 
     public dialogRef: MatDialogRef<RequestSecretAndEmailComponent>, 
     @Inject(MAT_DIALOG_DATA) public data: RecipientAndSecret) {
     this.form = fb.group({

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -20,9 +20,9 @@ export class MailComponent implements OnInit {
   @ViewChild(TemplateRef)
   dialogTemplate!: TemplateRef<any>;
 
-  form: FormGroup;
+  form: UntypedFormGroup;
 
-  constructor(fb: FormBuilder,
+  constructor(fb: UntypedFormBuilder,
     private mailService: MailService,
     private route: ActivatedRoute,
     private router: Router,

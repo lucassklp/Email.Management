@@ -18,7 +18,7 @@ namespace Backend.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseMySql(configuration.GetConnectionString("Default"), new MySqlServerVersion(new Version(8, 0, 21)));
+            options.UseNpgsql(configuration.GetConnectionString("Default")!);
             options.UseLoggerFactory(loggerFactory);
             base.OnConfiguring(options);
         }

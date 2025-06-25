@@ -102,13 +102,8 @@ namespace Email.Management
         {
             if (env.IsDevelopment())
             {
-                app.UseHttpsRedirection();
+                //app.UseHttpsRedirection();
                 app.UseDeveloperExceptionPage();
-                app.UseCors(x => x
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                );
             }
 
             app.UseSwagger();
