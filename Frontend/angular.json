@@ -75,18 +75,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "email-management:build"
+            "buildTarget": "email-management:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "email-management:build:production"
+              "buildTarget": "email-management:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "email-management:build"
+            "buildTarget": "email-management:build"
           }
         },
         "test": {
