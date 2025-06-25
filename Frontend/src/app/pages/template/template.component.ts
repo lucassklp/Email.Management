@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RequestSecretAndEmailComponent } from 'src/app/dialogs/request-secret-and-email/request-secret-and-email.component';
 import { RecipientAndSecret } from 'src/app/models/recipient.and.secret';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Component({
   selector: 'app-template',
