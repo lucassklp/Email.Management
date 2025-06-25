@@ -13,9 +13,10 @@ import { RecipientAndSecret } from 'src/app/models/recipient.and.secret';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-template',
-  templateUrl: './template.component.html',
-  styleUrls: ['./template.component.scss']
+    selector: 'app-template',
+    templateUrl: './template.component.html',
+    styleUrls: ['./template.component.scss'],
+    standalone: false
 })
 export class TemplateComponent implements OnInit {
 
