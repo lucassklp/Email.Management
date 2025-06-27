@@ -7,20 +7,20 @@ services:
       JwtSecret: '6sa4DF64b654fnb6fg4hm6y465jth4m65NF4G6N46EF4GN6F54G98NFBNF4GN98G4JM98D65BSGF4SFGS5F44df5s45fsdg4857sddf4s'
       PasswordSecret: 'f54sad6f4sa6df546sd4f6546FD54H6F5GH4J6ESD41F546d4f654gd65464D64G4b654af654b65d4f64G6A465464GN5H4GM64'
     ports: 
-      - '4000:80'
+      - '8080:8080'
     depends_on:
       database:
         condition: service_healthy
 
   database:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    image: postgres:17
     environment:
-      MYSQL_ROOT_PASSWORD: 'S4f3_P@ssw0rd!'
-    ports:
-      - "3309:3306"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: S4f3_P@ssw0rd!
+      POSTGRES_DB: email-management
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 20s
-      retries: 10
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+

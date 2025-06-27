@@ -15,24 +15,37 @@
 <mat-drawer-container class="main-container" autosize>
   <mat-drawer #drawer class="main-sidenav" opened="true" mode="side">
 
-    <mat-selection-list [multiple]="false">
-      <mat-list-option routerLink="/main/home">
-        <mat-icon mat-list-icon>home</mat-icon>
-        Home
-      </mat-list-option>
-      <mat-list-option routerLink="/main/template">
-        <mat-icon mat-list-icon>add</mat-icon>
-        Add Template
-      </mat-list-option>
-      <mat-list-option routerLink="/main/mail">
-        <mat-icon mat-list-icon>add</mat-icon>
-        Add Mail
-      </mat-list-option>
-      <mat-list-option (click)="authenticationService.logout()">
-        <mat-icon mat-list-icon>logout</mat-icon>
-        Logout
-      </mat-list-option>
-    </mat-selection-list>
+    <mat-nav-list>
+
+      <a mat-list-item routerLink="/main/home" routerLinkActive="active-link">
+        <div class="text-wrapper">
+          <mat-icon matListIcon>home</mat-icon>
+          <span matLine>Home</span>
+        </div>
+      </a>
+
+      <a mat-list-item routerLink="/main/template" routerLinkActive="active-link">
+        <div class="text-wrapper">
+          <mat-icon matListIcon>add</mat-icon>
+          <span matLine>Add Template</span>
+        </div>
+      </a>
+
+      <a mat-list-item routerLink="/main/mail" routerLinkActive="active-link">
+        <div class="text-wrapper">
+          <mat-icon matListIcon>add</mat-icon>
+          <span matLine>Add Mail</span>
+        </div>
+      </a>
+    
+      <a mat-list-item (click)="authenticationService.logout()">
+        <div class="text-wrapper">
+          <mat-icon matListIcon>logout</mat-icon>
+          <span matLine>Logout</span>
+        </div>
+      </a>
+    </mat-nav-list>
+
   </mat-drawer>
   <div class="container">
     <router-outlet></router-outlet>

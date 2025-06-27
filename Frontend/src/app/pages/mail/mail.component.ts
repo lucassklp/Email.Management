@@ -3,8 +3,6 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AlertDialogComponent } from 'src/app/dialogs/alert-dialog/alert-dialog.component';
-import { DialogModel } from 'src/app/models/dialog.model';
 import { Mail } from 'src/app/models/mail';
 import { MailService } from 'src/app/services/mail.service';
 

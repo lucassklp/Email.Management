@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Template } from 'src/app/models/template';
 import { TemplateService } from 'src/app/services/template.service';
@@ -38,7 +38,8 @@ export class TemplateComponent implements OnInit {
     private templateService: TemplateService, 
     private mailService: MailService,
     private toastr: ToastrService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) {
     this.form = fb.group({
       'name': ['', [Validators.required]],
       'description': ['', [Validators.required]],

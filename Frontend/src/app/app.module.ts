@@ -31,12 +31,17 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ErrorHandlingInterceptor } from './interceptors/error.handling.interceptor';
 import { ToastrModule } from 'ngx-toastr';
-import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { RequestSecretAndEmailComponent } from './dialogs/request-secret-and-email/request-secret-and-email.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from './dialogs/alert-dialog/alert-dialog.component';
+import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor-v2';
 
-@NgModule({ declarations: [
+export const monacoConfig: NgxMonacoEditorConfig = {
+  baseUrl: window.location.origin + "/assets/monaco/min/vs",
+}
+
+@NgModule({
+    declarations: [
         AppComponent,
         LoginComponent,
         HomeComponent,
@@ -47,13 +52,15 @@ import { AlertDialogComponent } from './dialogs/alert-dialog/alert-dialog.compon
         ConfirmDialogComponent,
         AlertDialogComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent], 
+    imports: [
+        BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         ToastrModule.forRoot(),
-        MonacoEditorModule,
+        MonacoEditorModule.forRoot(monacoConfig),
         MatToolbarModule,
         MatButtonModule,
         MatCardModule,
