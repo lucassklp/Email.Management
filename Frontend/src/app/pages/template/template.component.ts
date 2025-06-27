@@ -120,7 +120,6 @@ export class TemplateComponent implements OnInit {
         template.isHtml = this.form.get('isHtml')?.value;
         template.mailId = this.form.get('mailId')?.value;
         template.subject = this.form.get('subject')?.value;
-        template.secret = dialogResult.secret;
 
         template.recipient = {
           email: dialogResult.email,

@@ -125,6 +125,7 @@ namespace Email.Management.Controllers
                 Name = mailDto.Name,
                 Password = isUpdatePassword ? encryptedPassword : string.Empty,
                 Port = mailDto.Port,
+                Username = mailDto.Username,
                 UserId = user.Id
             };
 

@@ -131,8 +131,7 @@ namespace Email.Management.Controllers
             try
             {
                 mail = context.Set<Mail>()
-                    .Where(x => x.User.Id == user.Id && x.Id == template.MailId)
-                    .First();
+                    .First(x => x.User.Id == user.Id && x.Id == template.MailId);
             }
             catch(Exception ex)
             {
@@ -142,7 +141,8 @@ namespace Email.Management.Controllers
             var stubble = new StubbleBuilder().Build();
             var from = new MailAddress(mail.EmailAddress);
             var to = new MailAddress(template.Recipient.Email);
-            var password = encryption.Decrypt(mail.Password, template.Secret);
+            var secret = configuration.GetValue<string>("PasswordSecret");
+            var password = encryption.Decrypt(mail.Password, secret);
             var subject = await stubble.RenderAsync(template.Subject, template.Recipient.Args);
             var body = await stubble.RenderAsync(template.Content, template.Recipient.Args);
 
@@ -159,7 +159,7 @@ namespace Email.Management.Controllers
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
                 EnableSsl = mail.EnableSsl,
-                Credentials = new NetworkCredential(mail.EmailAddress, password)
+                Credentials = new NetworkCredential(mail.Username, password)
             };
 
             await smtp.SendMailAsync(message);
@@ -208,7 +208,7 @@ namespace Email.Management.Controllers
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,
                     EnableSsl = template.Mail.EnableSsl,
-                    Credentials = new NetworkCredential(template.Mail.EmailAddress, password)
+                    Credentials = new NetworkCredential(template.Mail.Username, password)
                 };
                 try
                 {

@@ -16,7 +16,6 @@ export class RequestSecretAndEmailComponent {
     @Inject(MAT_DIALOG_DATA) public data: RecipientAndSecret) {
     this.form = fb.group({
       'email': ['', [Validators.required, Validators.email]],
-      'secret': ['', [Validators.required]],
       'save': [true]
     });
 
