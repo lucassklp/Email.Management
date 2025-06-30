@@ -1,11 +1,15 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
 
 namespace Email.Management.Migrations
 {
+    /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -13,10 +17,10 @@ namespace Email.Management.Migrations
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    email = table.Column<string>(type: "varchar(30) CHARACTER SET utf8mb4", maxLength: 30, nullable: true),
-                    token = table.Column<Guid>(type: "char(36)", nullable: false),
-                    password = table.Column<string>(type: "varchar(130) CHARACTER SET utf8mb4", maxLength: 130, nullable: true)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    email = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
+                    token = table.Column<Guid>(type: "uuid", nullable: false),
+                    password = table.Column<string>(type: "character varying(130)", maxLength: 130, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,13 +32,13 @@ namespace Email.Management.Migrations
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: true),
-                    host = table.Column<string>(type: "varchar(150) CHARACTER SET utf8mb4", maxLength: 150, nullable: false),
-                    port = table.Column<int>(type: "int", nullable: false, defaultValue: 587),
-                    enable_ssl = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    email_address = table.Column<string>(type: "varchar(150) CHARACTER SET utf8mb4", maxLength: 150, nullable: false),
-                    password = table.Column<string>(type: "TEXT", nullable: true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    host = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    port = table.Column<int>(type: "integer", nullable: false, defaultValue: 587),
+                    enable_ssl = table.Column<bool>(type: "boolean", nullable: false),
+                    email_address = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    password = table.Column<string>(type: "text", nullable: true),
                     user_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -53,12 +57,12 @@ namespace Email.Management.Migrations
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: true),
-                    description = table.Column<string>(type: "varchar(200) CHARACTER SET utf8mb4", maxLength: 200, nullable: true),
-                    subject = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: true),
-                    content = table.Column<string>(type: "MEDIUMTEXT", nullable: true),
-                    is_html = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    subject = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    content = table.Column<string>(type: "text", nullable: true),
+                    is_html = table.Column<bool>(type: "boolean", nullable: false),
                     user_id = table.Column<long>(type: "bigint", nullable: false),
                     mail_id = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -106,6 +110,7 @@ namespace Email.Management.Migrations
                 columns: new[] { "email", "password" });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

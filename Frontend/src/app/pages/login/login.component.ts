@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
 
-  form: FormGroup;
-  constructor(private router: Router, private authenticationService: AuthenticationService, fb: FormBuilder) {
+  form: UntypedFormGroup;
+  constructor(private router: Router, private authenticationService: AuthenticationService, fb: UntypedFormBuilder) {
     this.form = fb.group({
       'email': ['', [Validators.required, Validators.email]],
       'password': ['', [Validators.required, Validators.minLength(6)]]

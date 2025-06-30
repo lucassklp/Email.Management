@@ -8,5 +8,6 @@
         public int Port { get; set; }
         public bool EnableSsl { get; set; }
         public string EmailAddress { get; set; }
+        public string Username { get; set; }
     }
 }

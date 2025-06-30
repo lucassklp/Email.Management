@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogModel } from 'src/app/models/dialog.model';
 
 @Component({
-  selector: 'app-alert-dialog',
-  templateUrl: './alert-dialog.component.html',
-  styleUrls: ['./alert-dialog.component.scss']
+    selector: 'app-alert-dialog',
+    templateUrl: './alert-dialog.component.html',
+    styleUrls: ['./alert-dialog.component.scss'],
+    standalone: false
 })
 export class AlertDialogComponent implements OnInit {
 

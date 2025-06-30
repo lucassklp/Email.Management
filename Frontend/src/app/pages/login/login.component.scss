@@ -1,0 +1,11 @@
+.main-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;     /* Centraliza verticalmente */
+}
+
+.box {
+  width: 100%;
+  max-width: 400px;
+}

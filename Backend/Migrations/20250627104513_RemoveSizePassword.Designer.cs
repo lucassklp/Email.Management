@@ -3,6 +3,7 @@ using System;
 using Backend.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Email.Management.Migrations
 {
     [DbContext(typeof(DaoContext))]
-    partial class DaoContextModelSnapshot : ModelSnapshot
+    [Migration("20250627104513_RemoveSizePassword")]
+    partial class RemoveSizePassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,11 +134,6 @@ namespace Email.Management.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("description");
-
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("external_id");
 
                     b.Property<bool>("IsHtml")
                         .HasColumnType("boolean")

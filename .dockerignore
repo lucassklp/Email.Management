@@ -5,3 +5,5 @@ Frontend/.angular
 Backend/.vs
 Backend/bin
 Backend/obj
+
+.idea/

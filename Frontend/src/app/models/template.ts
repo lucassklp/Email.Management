@@ -1,6 +1,7 @@
 export class Template {
     public id!: number;
     public name!: string;
+    public externalId!: string;
     public description!: string;
     public subject!: string;
     public content!: string;

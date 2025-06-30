@@ -5,19 +5,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
 
 namespace Email.Management.Migrations
 {
     [DbContext(typeof(DaoContext))]
-    [Migration("20210218130534_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250630095117_AddExternalId")]
+    partial class AddExternalId
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Backend.Domain.User", b =>
                 {
@@ -26,18 +32,20 @@ namespace Email.Management.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
                     b.Property<string>("Email")
                         .HasMaxLength(30)
-                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("email");
 
                     b.Property<string>("Password")
                         .HasMaxLength(130)
-                        .HasColumnType("varchar(130) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(130)")
                         .HasColumnName("password");
 
                     b.Property<Guid>("Token")
-                        .HasColumnType("char(36)")
+                        .HasColumnType("uuid")
                         .HasColumnName("token");
 
                     b.HasKey("Id")
@@ -58,40 +66,48 @@ namespace Email.Management.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("email_address");
 
                     b.Property<bool>("EnableSsl")
-                        .HasColumnType("tinyint(1)")
+                        .HasColumnType("boolean")
                         .HasColumnName("enable_ssl");
 
                     b.Property<string>("Host")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("host");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("name");
 
                     b.Property<string>("Password")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("password");
 
                     b.Property<int>("Port")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(587)
                         .HasColumnName("port");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("username");
 
                     b.HasKey("Id")
                         .HasName("pk_mail");
@@ -108,17 +124,24 @@ namespace Email.Management.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
                     b.Property<string>("Content")
-                        .HasColumnType("MEDIUMTEXT")
+                        .HasColumnType("text")
                         .HasColumnName("content");
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
-                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(200)")
                         .HasColumnName("description");
 
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("external_id");
+
                     b.Property<bool>("IsHtml")
-                        .HasColumnType("tinyint(1)")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_html");
 
                     b.Property<long>("MailId")
@@ -127,12 +150,12 @@ namespace Email.Management.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("name");
 
                     b.Property<string>("Subject")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("subject");
 
                     b.Property<long>("UserId")
@@ -154,9 +177,9 @@ namespace Email.Management.Migrations
                     b.HasOne("Backend.Domain.User", "User")
                         .WithMany("Mails")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("fk_mail_user_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_mail_user_user_id");
 
                     b.Navigation("User");
                 });
@@ -166,16 +189,16 @@ namespace Email.Management.Migrations
                     b.HasOne("Email.Management.Domain.Mail", "Mail")
                         .WithMany("Templates")
                         .HasForeignKey("MailId")
-                        .HasConstraintName("fk_template_mail_mail_id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_template_mail_mail_id");
 
                     b.HasOne("Backend.Domain.User", "User")
                         .WithMany("Templates")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("fk_template_user_user_id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_template_user_user_id");
 
                     b.Navigation("Mail");
 

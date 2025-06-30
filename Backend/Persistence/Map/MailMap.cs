@@ -15,7 +15,8 @@ namespace Email.Management.Persistence.Map
             builder.Property(x => x.EmailAddress).HasMaxLength(150).IsRequired();
             builder.Property(x => x.EnableSsl).IsRequired();
             builder.Property(x => x.Name).HasMaxLength(50);
-            builder.Property(x => x.Password).HasColumnType("TEXT");
+            builder.Property(x => x.Password);
+            builder.Property(x => x.Username).HasMaxLength(150).IsRequired();
             builder.Property(x => x.Port).HasDefaultValue(587);
 
             builder.HasOne(x => x.User)

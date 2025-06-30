@@ -44,6 +44,7 @@ namespace Email.Management.Controllers
                 .Select(x => new TemplateDto
                 {
                     Id = x.Id,
+                    ExternalId = x.ExternalId,
                     Content = x.Content,
                     Description = x.Description,
                     IsHtml = x.IsHtml,
@@ -86,9 +87,15 @@ namespace Email.Management.Controllers
         [HttpPost]
         public TemplateDto Save([FromBody] TemplateDto templateDto)
         {
+            if (context.Set<Template>().Any(x =>  x.Id != templateDto.Id && x.UserId == user.Id && x.ExternalId == templateDto.ExternalId))
+            {
+                throw new BusinessException("template-already-exists", "Template already exists. Choose a different external id.");
+            }
+            
             Template template = new Template
             {
                 Id = templateDto.Id,
+                ExternalId = templateDto.ExternalId,
                 Content = templateDto.Content,
                 Description = templateDto.Description,
                 IsHtml = templateDto.IsHtml,
@@ -131,8 +138,7 @@ namespace Email.Management.Controllers
             try
             {
                 mail = context.Set<Mail>()
-                    .Where(x => x.User.Id == user.Id && x.Id == template.MailId)
-                    .First();
+                    .First(x => x.User.Id == user.Id && x.Id == template.MailId);
             }
             catch(Exception ex)
             {
@@ -142,7 +148,8 @@ namespace Email.Management.Controllers
             var stubble = new StubbleBuilder().Build();
             var from = new MailAddress(mail.EmailAddress);
             var to = new MailAddress(template.Recipient.Email);
-            var password = encryption.Decrypt(mail.Password, template.Secret);
+            var secret = configuration.GetValue<string>("PasswordSecret");
+            var password = encryption.Decrypt(mail.Password, secret);
             var subject = await stubble.RenderAsync(template.Subject, template.Recipient.Args);
             var body = await stubble.RenderAsync(template.Content, template.Recipient.Args);
 
@@ -159,7 +166,7 @@ namespace Email.Management.Controllers
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
                 EnableSsl = mail.EnableSsl,
-                Credentials = new NetworkCredential(mail.EmailAddress, password)
+                Credentials = new NetworkCredential(mail.Username, password)
             };
 
             await smtp.SendMailAsync(message);
@@ -167,16 +174,16 @@ namespace Email.Management.Controllers
             return Ok();
         }
 
-        [HttpPost("send/{id}")]
+        [HttpPost("send/{externalId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Send(long id, [FromBody] SendMailDto sendMail)
+        public async Task<IActionResult> Send(string externalId, [FromBody] SendMailDto sendMail)
         {
             Template template;
             try
             {
                 template = await context.Set<Template>()
                     .Include(x => x.Mail)
-                    .FirstAsync(x => x.User.Token == sendMail.Token && x.Id == id);
+                    .FirstAsync(x => x.User.Token == sendMail.Token && x.ExternalId == externalId);
             }
             catch
             {
@@ -208,7 +215,7 @@ namespace Email.Management.Controllers
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,
                     EnableSsl = template.Mail.EnableSsl,
-                    Credentials = new NetworkCredential(template.Mail.EmailAddress, password)
+                    Credentials = new NetworkCredential(template.Mail.Username, password)
                 };
                 try
                 {

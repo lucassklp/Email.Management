@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Template } from 'src/app/models/template';
 import { TemplateService } from 'src/app/services/template.service';
 import Mustache from 'mustache';
@@ -13,14 +13,15 @@ import { RecipientAndSecret } from 'src/app/models/recipient.and.secret';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-template',
-  templateUrl: './template.component.html',
-  styleUrls: ['./template.component.scss']
+    selector: 'app-template',
+    templateUrl: './template.component.html',
+    styleUrls: ['./template.component.scss'],
+    standalone: false
 })
 export class TemplateComponent implements OnInit {
 
   id: number = 0;
-  form: FormGroup;
+  form: UntypedFormGroup;
   editorOptions = {theme: 'vs-white', language: 'html'};
   emails: {id: number, name: string}[] = []
   pairs: Pair<string, string>[] = [
@@ -32,14 +33,16 @@ export class TemplateComponent implements OnInit {
 
   recipientAndSecret?: RecipientAndSecret;
 
-  constructor(fb: FormBuilder, 
+  constructor(fb: UntypedFormBuilder, 
     private route: ActivatedRoute, 
     private templateService: TemplateService, 
     private mailService: MailService,
     private toastr: ToastrService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef) {
     this.form = fb.group({
       'name': ['', [Validators.required]],
+      'externalId': ['', [Validators.required]],
       'description': ['', [Validators.required]],
       'subject': ['', [Validators.required]],
       'isHtml': [true],
@@ -47,7 +50,7 @@ export class TemplateComponent implements OnInit {
       'mailId': [0]
     });
 
-    this.form.get('content')?.valueChanges.subscribe(_ => this.preview())
+    this.form.get('content')?.valueChanges.subscribe(val => this.preview(val))
 
     this.mailService.listAll().subscribe(mails => {
       this.emails = mails;
@@ -61,10 +64,11 @@ export class TemplateComponent implements OnInit {
         this.templateService.get(this.id).subscribe(template => {
           this.form.get('content')?.setValue(template.content)
           this.form.get('name')?.setValue(template.name);
+          this.form.get('externalId')?.setValue(template.externalId);
           this.form.get('description')?.setValue(template.description);
           this.form.get('isHtml')?.setValue(template.isHtml);
           this.form.get('mailId')?.setValue(template.mailId);
-          this.form.get('subject')?.setValue(template.subject);    
+          this.form.get('subject')?.setValue(template.subject);
         })
       }
    });
@@ -79,13 +83,13 @@ export class TemplateComponent implements OnInit {
     });
   }
 
-  preview(){
+  preview(value: string){
     let iframe = document.getElementById('preview') as HTMLIFrameElement;
     let params: {[key: string]: string} = {};
     this.pairs.forEach(x => params[x.key] = x.value);
 
-    let content = Mustache.render(this.form.value.content, params);
-    iframe.src = "data:text/html;charset=utf-8," + encodeURIComponent(content);
+    let content = Mustache.render(value, params);
+    iframe.src = "data:text/html;charset=utf-8," + encodeURIComponent(content)
   }
 
   removeParam(index: number){
@@ -119,7 +123,6 @@ export class TemplateComponent implements OnInit {
         template.isHtml = this.form.get('isHtml')?.value;
         template.mailId = this.form.get('mailId')?.value;
         template.subject = this.form.get('subject')?.value;
-        template.secret = dialogResult.secret;
 
         template.recipient = {
           email: dialogResult.email,

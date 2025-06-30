@@ -106,16 +106,17 @@ table{
 	margin: 0;
 }
 
-.main-wrapper .mat-card {
+.main-wrapper .mat-mdc-card {
 	padding: 45px 70px 55px;
 }
 
-.main-wrapper .mat-stroked-button {
+.main-wrapper .mat-mdc-outlined-button {
 	border: 1px solid currentColor;
 	line-height: 54px;
 	background: #fff7fa;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .main-wrapper .mat-form-field-appearance-legacy .mat-form-field-infix {
 	padding: 0.8375em 0;
 }

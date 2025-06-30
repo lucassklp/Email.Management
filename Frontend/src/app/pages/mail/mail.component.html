@@ -1,6 +1,6 @@
 <div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
 
-    <mat-card>
+    <mat-card appearance="outlined">
         <mat-card-header>
             <mat-card-title>Mail</mat-card-title>
         </mat-card-header>
@@ -31,7 +31,11 @@
             </p>
         
             <mat-form-field class="full-width">
-                <input matInput formControlName="emailAddress" placeholder="Username">
+                <input matInput formControlName="emailAddress" placeholder="Email Address">
+            </mat-form-field>
+
+            <mat-form-field class="full-width">
+                <input matInput formControlName="username" placeholder="Username">
             </mat-form-field>
         
             <mat-form-field class="full-width">

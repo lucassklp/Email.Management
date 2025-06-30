@@ -8,6 +8,7 @@ namespace Email.Management.Domain
 
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ExternalId { get; set; }
 
         public string Subject { get; set; }
         public string Content { get; set; }

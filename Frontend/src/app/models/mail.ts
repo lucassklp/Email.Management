@@ -5,6 +5,7 @@ export class Mail {
     port!: number;
     enableSsl!: boolean;
     emailAddress!: string;
+    username!: string;
     password!: string
     secret?: string
 }
