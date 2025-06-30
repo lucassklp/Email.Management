@@ -26,7 +26,6 @@
     <Folder Include="Persistence\Map\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Middlewares\" />
-    <Folder Include="Validators\" />
     <Folder Include="Providers\" />
   </ItemGroup>
 </Project>

@@ -42,6 +42,7 @@ export class TemplateComponent implements OnInit {
     private cdr: ChangeDetectorRef) {
     this.form = fb.group({
       'name': ['', [Validators.required]],
+      'externalId': ['', [Validators.required]],
       'description': ['', [Validators.required]],
       'subject': ['', [Validators.required]],
       'isHtml': [true],
@@ -63,6 +64,7 @@ export class TemplateComponent implements OnInit {
         this.templateService.get(this.id).subscribe(template => {
           this.form.get('content')?.setValue(template.content)
           this.form.get('name')?.setValue(template.name);
+          this.form.get('externalId')?.setValue(template.externalId);
           this.form.get('description')?.setValue(template.description);
           this.form.get('isHtml')?.setValue(template.isHtml);
           this.form.get('mailId')?.setValue(template.mailId);

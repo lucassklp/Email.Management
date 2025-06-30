@@ -44,6 +44,7 @@ namespace Email.Management.Controllers
                 .Select(x => new TemplateDto
                 {
                     Id = x.Id,
+                    ExternalId = x.ExternalId,
                     Content = x.Content,
                     Description = x.Description,
                     IsHtml = x.IsHtml,
@@ -86,9 +87,15 @@ namespace Email.Management.Controllers
         [HttpPost]
         public TemplateDto Save([FromBody] TemplateDto templateDto)
         {
+            if (context.Set<Template>().Any(x =>  x.Id != templateDto.Id && x.UserId == user.Id && x.ExternalId == templateDto.ExternalId))
+            {
+                throw new BusinessException("template-already-exists", "Template already exists. Choose a different external id.");
+            }
+            
             Template template = new Template
             {
                 Id = templateDto.Id,
+                ExternalId = templateDto.ExternalId,
                 Content = templateDto.Content,
                 Description = templateDto.Description,
                 IsHtml = templateDto.IsHtml,
@@ -167,16 +174,16 @@ namespace Email.Management.Controllers
             return Ok();
         }
 
-        [HttpPost("send/{id}")]
+        [HttpPost("send/{externalId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Send(long id, [FromBody] SendMailDto sendMail)
+        public async Task<IActionResult> Send(string externalId, [FromBody] SendMailDto sendMail)
         {
             Template template;
             try
             {
                 template = await context.Set<Template>()
                     .Include(x => x.Mail)
-                    .FirstAsync(x => x.User.Token == sendMail.Token && x.Id == id);
+                    .FirstAsync(x => x.User.Token == sendMail.Token && x.ExternalId == externalId);
             }
             catch
             {
