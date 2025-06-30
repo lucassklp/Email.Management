@@ -49,7 +49,7 @@ export class TemplateComponent implements OnInit {
       'mailId': [0]
     });
 
-    this.form.get('content')?.valueChanges.subscribe(_ => this.preview())
+    this.form.get('content')?.valueChanges.subscribe(val => this.preview(val))
 
     this.mailService.listAll().subscribe(mails => {
       this.emails = mails;
@@ -66,7 +66,7 @@ export class TemplateComponent implements OnInit {
           this.form.get('description')?.setValue(template.description);
           this.form.get('isHtml')?.setValue(template.isHtml);
           this.form.get('mailId')?.setValue(template.mailId);
-          this.form.get('subject')?.setValue(template.subject);    
+          this.form.get('subject')?.setValue(template.subject);
         })
       }
    });
@@ -81,13 +81,13 @@ export class TemplateComponent implements OnInit {
     });
   }
 
-  preview(){
+  preview(value: string){
     let iframe = document.getElementById('preview') as HTMLIFrameElement;
     let params: {[key: string]: string} = {};
     this.pairs.forEach(x => params[x.key] = x.value);
 
-    let content = Mustache.render(this.form.value.content, params);
-    iframe.src = "data:text/html;charset=utf-8," + encodeURIComponent(content);
+    let content = Mustache.render(value, params);
+    iframe.src = "data:text/html;charset=utf-8," + encodeURIComponent(content)
   }
 
   removeParam(index: number){
